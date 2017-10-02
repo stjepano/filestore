@@ -1,5 +1,6 @@
 package com.stjepano.filestore.service;
 
+import com.stjepano.filestore.common.FileInfo;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.util.List;
 
+import com.stjepano.filestore.common.FileInfo;
+
 /**
  * File service responsible for reading and storing files.
  */

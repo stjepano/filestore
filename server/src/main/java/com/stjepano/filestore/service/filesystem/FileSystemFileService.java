@@ -1,12 +1,12 @@
 package com.stjepano.filestore.service.filesystem;
 
+import com.stjepano.filestore.common.FileInfo;
 import com.stjepano.filestore.service.BucketAlreadyExistsException;
 import com.stjepano.filestore.service.BucketDoesNotExistException;
 import com.stjepano.filestore.service.BucketId;
 import com.stjepano.filestore.service.FileAlreadyExistException;
 import com.stjepano.filestore.service.FileDoesNotExistException;
 import com.stjepano.filestore.service.FileId;
-import com.stjepano.filestore.service.FileInfo;
 import com.stjepano.filestore.service.FileService;
 import com.stjepano.filestore.service.InvalidBucketIdException;
 import org.springframework.core.io.Resource;

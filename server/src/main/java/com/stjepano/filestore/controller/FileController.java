@@ -2,7 +2,7 @@ package com.stjepano.filestore.controller;
 
 import com.stjepano.filestore.service.BucketId;
 import com.stjepano.filestore.service.FileId;
-import com.stjepano.filestore.service.FileInfo;
+import com.stjepano.filestore.common.FileInfo;
 import com.stjepano.filestore.service.ObjectStoreException;
 import com.stjepano.filestore.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;

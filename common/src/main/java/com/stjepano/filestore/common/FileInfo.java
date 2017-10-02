@@ -1,4 +1,4 @@
-package com.stjepano.filestore.service;
+package com.stjepano.filestore.common;
 
 import java.io.IOException;
 import java.nio.file.Files;

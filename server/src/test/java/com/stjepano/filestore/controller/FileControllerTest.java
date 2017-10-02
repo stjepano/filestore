@@ -5,7 +5,7 @@ import com.stjepano.filestore.service.BucketId;
 import com.stjepano.filestore.service.FileAlreadyExistException;
 import com.stjepano.filestore.service.FileDoesNotExistException;
 import com.stjepano.filestore.service.FileId;
-import com.stjepano.filestore.service.FileInfo;
+import com.stjepano.filestore.common.FileInfo;
 import com.stjepano.filestore.service.FileService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

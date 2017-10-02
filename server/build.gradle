@@ -17,6 +17,7 @@ jar {
 }
 
 dependencies {
+    compile project(':common')
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.hibernate:hibernate-validator")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")

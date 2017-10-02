@@ -2,12 +2,11 @@ apply plugin: 'java'
 apply plugin: 'idea'
 
 jar {
-    baseName = 'filestore-client'
+    baseName = 'filestore-common'
     version = "1.0"
 }
 
 dependencies {
-    compile project(':common')
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
 }
