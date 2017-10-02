@@ -52,10 +52,11 @@ The zip file is located under _server/build/dist/filestore-server-1.0.zip_.
 
 To run the service extract zip file into desired directory and from that directory edit application.properties file to your liking (most notably set filestore.contentDir property) and then run
 ```
-$ java -jar filestore-server.jar
+$ java -jar filestore-server-1.0.jar
 ```
 
-This will start an HTTP server at http://localhost:8080 if you did not change defaults with files/buckets served from configured contentDir
+This will start an HTTP server at http://localhost:8080 if you did not change defaults. Files/buckets will be served from
+configured _contentDir_ (by default ./content).
 
 
 ### Configuration
