@@ -32,7 +32,7 @@ Files are stored in buckets like this:
      ...
 ```
 
-Only one level of hierarchy is supported.
+Only one level of hierarchy is supported ie. folders in buckets are not supported.
 
 ### REST operations
 
