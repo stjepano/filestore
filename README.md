@@ -36,6 +36,17 @@ Only one level of hierarchy is supported ie. folders in buckets are not supporte
 
 ### REST operations
 
+All REST operations will return 200 on success with no response body unless specified otherwise.
+
+All error responses (>= 400) will have a response body which looks like this:
+
+```
+{
+  "error": true,
+  "message": "Some description .... could be null"
+}
+```
+
 #### Querying and downloading
 
 ##### GET / 
