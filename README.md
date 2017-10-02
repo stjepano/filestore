@@ -38,7 +38,9 @@ Only one level of hierarchy is supported ie. folders in buckets are not supporte
 
 #### Querying and downloading
 
-*GET /* - get list of bucket
+##### GET / 
+
+Get list of buckets. 
 
 Returns array of bucket names on success (status code 200):
 
@@ -46,7 +48,9 @@ Returns array of bucket names on success (status code 200):
 [ "bucketA", "bucketB", "bucketC", ... ]
 ```
 
-*GET /bucket-name/* - get list of files in a bucket
+##### GET /bucket-name/
+
+Get list of files in a bucket.
 
 Returns response looking like this on success (status code 200):
 ```
@@ -62,16 +66,20 @@ Error responses:
 * 404 if bucket does not exists
 * 400 if bucket name is invalid.
 
-*GET /bucket-name/file-name* - download a file
+##### GET /bucket-name/file-name
 
-Returns 200 on success together with file data.
+Download a file.
+
+Returns file data on success (status code 200).
 
 Error responses:
 
 * 404 if bucket or file do not exist
 * 400 if bucket name or file name is invalid
 
-*GET /bucket-name/file-name?att=false* - download file not as attachment (effect in browser is to open it)
+##### GET /bucket-name/file-name?att=false
+
+Download file not as attachment (effect in a browser is to open file in current tab).
 
 Returns 200 on success together with file data.
 
@@ -82,7 +90,9 @@ Error responses:
 
 #### Deleting buckets and files
  
-*DELETE /bucket-name/* - delete a bucket (and all files in it, use with care)
+##### DELETE /bucket-name/
+
+Delete a bucket (and all files in it, use with care).
 
 Returns 200 on success
 
@@ -91,7 +101,9 @@ Error responses:
 * 404 if bucket or file do not exist
 * 400 if bucket name or file name is invalid
 
-*DELETE /bucket-name/file-name* - delete a file
+##### DELETE /bucket-name/file-name
+
+Delete a file.
 
 Returns 200 on success
 
@@ -102,7 +114,9 @@ Error responses:
 
 #### Creating bucket
 
-*POST /* - create a bucket, specify bucket name in body
+##### POST /
+
+Create a bucket, specify bucket name in body
 
 Example:
 
@@ -122,7 +136,9 @@ Error responses:
 
 #### Uploading new files and overwriting existing ones  
 
-*POST /bucket-name/* - upload a file, this takes multipart form file with key file, file will be created with original filename
+##### POST /bucket-name/
+
+Upload a file, this takes multipart form file with key file, file will be created with original filename
 
 Error responses:
 
@@ -130,7 +146,9 @@ Error responses:
 * 404 if bucket does not exist
 * 400 if bucket or file name invalid
 
-*POST /bucket-name/?filename=xyz.png* - upload a file but this time with different filename
+##### POST /bucket-name/?filename=xyz.png
+
+Upload a file but with different filename
 
 Error responses:
 
@@ -140,7 +158,9 @@ Error responses:
 
 Uploading can not overwrite existing file, if you attempt to upload to an existing file you will get 409. To overwrite existing file use:
 
-*PUT /bucket-name/file-name* - overwrite file with new data
+##### PUT /bucket-name/file-name
+
+Overwrite file with new data.
 
 Error responses:
 
