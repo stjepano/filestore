@@ -34,6 +34,8 @@ Files are stored in buckets like this:
 
 Only one level of hierarchy is supported ie. folders in buckets are not supported.
 
+Current implementation supports only local filesystem with buckets as directories in configured path and files stored in bucket directories.
+
 ### REST operations
 
 All REST operations will return 200 on success with no response body unless specified otherwise.
