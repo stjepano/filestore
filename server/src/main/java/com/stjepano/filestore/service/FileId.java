@@ -23,8 +23,12 @@ public final class FileId {
         if (!isValid(fileName)) {
             throw new InvalidFileIdException(fileName);
         }
-        BucketId bucketId = BucketId.from(bucketName);
-        return new FileId(bucketId, fileName);
+        try {
+            BucketId bucketId = BucketId.from(bucketName);
+            return new FileId(bucketId, fileName);
+        } catch (InvalidBucketIdException e) {
+            throw new InvalidFileIdException(e);
+        }
     }
 
     public BucketId getBucketId() {
