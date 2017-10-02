@@ -8,7 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Application configuration
@@ -16,13 +19,24 @@ import java.nio.file.FileSystems;
 @Configuration
 public class ApplicationConfiguration {
 
-    @Value("${app.files.path}")
-    private String appFilesPathString;
+    @Value("${filestore.contentDir}")
+    private String contentDirStr;
 
     @Bean
     public FileService fileService() {
-        return new FileSystemFileService(appFilesPathString,
-                FileSystems.getDefault(),
+        FileSystem fileSystem = FileSystems.getDefault();
+        Path contentDir = fileSystem.getPath(contentDirStr);
+
+        if (!Files.exists(contentDir) || !Files.isDirectory(contentDir)) {
+            throw new RuntimeException("Configured content directory '" + contentDir.toString() + "' does not exist!");
+        }
+
+        if (!Files.isReadable(contentDir) || !Files.isWritable(contentDir)) {
+            throw new RuntimeException("Configured content directory '" + contentDir.toString() + "' is not readable and/or writable by application!");
+        }
+
+        return new FileSystemFileService(contentDirStr,
+                fileSystem,
                 new FileSystemResourceLoader()
         );
     }

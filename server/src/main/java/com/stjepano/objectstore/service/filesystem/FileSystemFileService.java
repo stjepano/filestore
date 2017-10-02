@@ -282,7 +282,6 @@ public class FileSystemFileService implements FileService {
 
         validateFileUnderBucket(bucketPath, filePath);
 
-        System.err.println(resourceLoader.getClass().getName());
         return resourceLoader.getResource(filePath.toAbsolutePath().toString());
     }
 }
