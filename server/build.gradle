@@ -29,3 +29,23 @@ dependencies {
     testCompile group: 'com.google.jimfs', name: 'jimfs', version: '1.1'
 
 }
+
+task prepareDistDirectories(type: Delete, dependsOn: build) {
+    delete "${buildDir}/dist"
+    delete "${buildDir}/dist-files"
+}
+
+task copyDistFiles(type: Copy, dependsOn: prepareDistDirectories) {
+    from "${libsDir}"
+    include "*.jar"
+    from "dist"
+    include "*.properties"
+    into "${buildDir}/dist-files"
+}
+
+task distribution(type: Zip, dependsOn: copyDistFiles) {
+    from "${buildDir}/dist-files"
+    include "*"
+    archiveName "${jar.baseName}-${jar.version}.zip"
+    destinationDir  file("${buildDir}/dist")
+}
