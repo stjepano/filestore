@@ -1,6 +1,5 @@
 package com.stjepano.objectstore.controller;
 
-import com.stjepano.objectstore.controller.FileController;
 import com.stjepano.objectstore.service.BucketDoesNotExistException;
 import com.stjepano.objectstore.service.BucketId;
 import com.stjepano.objectstore.service.FileAlreadyExistException;
@@ -8,7 +7,6 @@ import com.stjepano.objectstore.service.FileDoesNotExistException;
 import com.stjepano.objectstore.service.FileId;
 import com.stjepano.objectstore.service.FileInfo;
 import com.stjepano.objectstore.service.FileService;
-import com.stjepano.objectstore.service.FileType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -66,7 +64,7 @@ public class FileControllerTest {
 
         when(fileService.getFiles(BucketId.from("bucket")))
                 .thenReturn(Arrays.asList(
-                        new FileInfo("filea.png", 5000, FileType.REGULAR_FILE, "image/png", now)
+                        new FileInfo("filea.png", 5000, "image/png", now)
                 ));
 
         String response = mockMvc.perform(get("/bucket/"))
@@ -75,7 +73,7 @@ public class FileControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        String expectedJson = "[{\"name\": \"filea.png\", \"size\": 5000, \"type\": \"regular\", \"mimeType\": \"image/png\", \"dateCreated\": \""+nowStr+"\"}]";
+        String expectedJson = "[{\"name\": \"filea.png\", \"size\": 5000, \"mimeType\": \"image/png\", \"dateCreated\": \""+nowStr+"\"}]";
 
         JSONAssert.assertEquals(expectedJson, response, true);
 

@@ -15,15 +15,13 @@ public class FileInfo {
 
     private final String name;
     private final long size;
-    private final FileType type;
     private final String mimeType;
     private final LocalDateTime dateCreated;
 
 
-    public FileInfo(String name, long size, FileType type, String mimeType, LocalDateTime dateCreated) {
+    public FileInfo(String name, long size, String mimeType, LocalDateTime dateCreated) {
         this.name = name;
         this.size = size;
-        this.type = type;
         this.mimeType = mimeType;
         this.dateCreated = dateCreated;
     }
@@ -34,10 +32,6 @@ public class FileInfo {
 
     public long getSize() {
         return size;
-    }
-
-    public FileType getType() {
-        return type;
     }
 
     public String getMimeType() {
@@ -56,12 +50,8 @@ public class FileInfo {
         }
         BasicFileAttributes basicFileAttributes = Files.readAttributes(path, BasicFileAttributes.class);
         FileTime creationTime = basicFileAttributes.creationTime();
-        FileType fileType = FileType.REGULAR_FILE;
-        if (Files.isDirectory(path)) {
-            fileType = FileType.DIRECTORY;
-        }
         LocalDateTime dateCreated = LocalDateTime.ofInstant(creationTime.toInstant(), ZoneOffset.systemDefault());
         String mimeType = Files.probeContentType(path);
-        return new FileInfo(filename, size, fileType, mimeType, dateCreated);
+        return new FileInfo(filename, size, mimeType, dateCreated);
     }
 }
