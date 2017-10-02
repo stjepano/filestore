@@ -36,6 +36,30 @@ Only one level of hierarchy is supported ie. folders in buckets are not supporte
 
 Current implementation supports only local filesystem with buckets as directories in configured path and files stored in bucket directories.
 
+### Building, installing and running
+
+To run tests:
+```
+$ gradle test
+```
+
+To create a distribution zip (build, compress)
+```
+$ gradle distribution
+```
+
+The zip file is located under _server/build/dist/filestore-server-1.0.zip_. 
+
+To run it
+```
+$ java -jar server/build/libs/filestore-server.jar
+```
+
+This will start an HTTP server at http://localhost:8080.
+
+
+### Configuration
+
 ### REST operations
 
 All REST operations will return 200 on success with no response body unless specified otherwise.
