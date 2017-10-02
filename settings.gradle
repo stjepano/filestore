@@ -1,3 +1,4 @@
 rootProject.name = 'filestore'
 
 include ':server'
+include ':client'
