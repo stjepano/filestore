@@ -26,11 +26,12 @@ public class OkHttpFileStore implements FileStore {
     private final URI serverUri;
 
     private final OkHttpClient okHttpClient;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
-    public OkHttpFileStore(URI serverUri) {
+    public OkHttpFileStore(URI serverUri, OkHttpClient okHttpClient, ObjectMapper objectMapper) {
         this.serverUri = serverUri;
-        okHttpClient = new OkHttpClient();
+        this.okHttpClient = okHttpClient;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class OkHttpFileStore implements FileStore {
             final Response response = okHttpClient.newCall(request).execute();
 
             if (!response.isSuccessful() && !response.isRedirect()) {
-                final ErrorResponse errorResponse = Utils.from(response, objectMapper);
+                final ErrorResponse errorResponse = Utils.errorResponse(response, this.objectMapper);
                 throw new FileStoreServerException(response.code(), errorResponse.getMessage());
             }
 
@@ -51,7 +52,7 @@ public class OkHttpFileStore implements FileStore {
                     response.body().string(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, String.class)
             );
-            return bucketNameList.stream().map(name -> new OkHttpBucket(okHttpClient, serverUri, name)).collect(Collectors.toList());
+            return bucketNameList.stream().map(this::newBucket).collect(Collectors.toList());
 
         } catch (IOException e) {
             throw new FileStoreException(e);
@@ -75,11 +76,11 @@ public class OkHttpFileStore implements FileStore {
             final Response response = okHttpClient.newCall(request).execute();
 
             if (!response.isSuccessful() && !response.isRedirect()) {
-                final ErrorResponse errorResponse = Utils.from(response, objectMapper);
+                final ErrorResponse errorResponse = Utils.errorResponse(response, this.objectMapper);
                 throw new FileStoreServerException(response.code(), errorResponse.getMessage());
             }
 
-            return new OkHttpBucket(okHttpClient, serverUri, bucketName);
+            return new OkHttpBucket(this, bucketName);
         } catch (IOException e) {
             throw new FileStoreException(e);
         }
@@ -106,5 +107,17 @@ public class OkHttpFileStore implements FileStore {
 
     public URI getServerUri() {
         return serverUri;
+    }
+
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
+    public OkHttpBucket newBucket(String bucketName) {
+        return new OkHttpBucket(this, bucketName);
     }
 }

@@ -13,11 +13,12 @@ import java.time.ZoneOffset;
  */
 public class FileInfo {
 
-    private final String name;
-    private final long size;
-    private final String mimeType;
-    private final LocalDateTime dateCreated;
+    private String name;
+    private long size;
+    private String mimeType;
+    private LocalDateTime dateCreated;
 
+    public FileInfo() { }
 
     public FileInfo(String name, long size, String mimeType, LocalDateTime dateCreated) {
         this.name = name;
@@ -30,16 +31,32 @@ public class FileInfo {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public long getSize() {
         return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 
     public String getMimeType() {
         return mimeType;
     }
 
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
     public LocalDateTime getDateCreated() {
         return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public static FileInfo from(Path path) throws IOException {

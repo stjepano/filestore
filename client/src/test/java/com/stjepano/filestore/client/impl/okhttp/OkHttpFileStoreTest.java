@@ -5,6 +5,7 @@ import com.stjepano.filestore.client.Bucket;
 import com.stjepano.filestore.client.FileStoreServerException;
 import com.stjepano.filestore.common.ErrorResponse;
 import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -37,7 +38,7 @@ public class OkHttpFileStoreTest {
         final HttpUrl mockWebServerUrl = mockWebServer.url("/");
         //mockWebServer.start();
 
-        fileStore = new OkHttpFileStore(mockWebServerUrl.uri());
+        fileStore = new OkHttpFileStore(mockWebServerUrl.uri(), new OkHttpClient(), objectMapper);
     }
 
     @After

@@ -58,11 +58,7 @@ public class FileStoresTest {
         public Bucket createBucket(String bucketName) {
             return null;
         }
-
-        @Override
-        public void deleteBucket(Bucket bucket) {
-
-        }
+        
     }
 
     public static class TestFileStoreFactory implements FileStoreFactory {

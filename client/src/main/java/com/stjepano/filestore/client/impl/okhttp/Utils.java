@@ -8,7 +8,8 @@ import java.io.IOException;
 
 class Utils {
 
-    public static ErrorResponse from(Response response, ObjectMapper objectMapper) throws IOException {
+
+    public static ErrorResponse errorResponse(Response response, ObjectMapper objectMapper) throws IOException {
         return objectMapper.readValue(
                 response.body().string(),
                 ErrorResponse.class

@@ -28,15 +28,11 @@ import java.util.Optional;
  */
 public class OkHttpBucket implements Bucket {
 
-    private final OkHttpClient okHttpClient;
-    private final URI serverUri;
+    private final OkHttpFileStore okHttpFileStore;
     private final String name;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public OkHttpBucket(OkHttpClient okHttpClient, URI serverUri, String name) {
-        this.okHttpClient = okHttpClient;
-        this.serverUri = serverUri;
+    public OkHttpBucket(OkHttpFileStore okHttpFileStore, String name) {
+        this.okHttpFileStore = okHttpFileStore;
         this.name = name;
     }
 
@@ -46,18 +42,26 @@ public class OkHttpBucket implements Bucket {
     }
 
     private void throwIfResponseInError(Response response) throws IOException {
-        if (!response.isSuccessful() || !response.isRedirect()) {
-            final ErrorResponse errorResponse = objectMapper.readValue(response.body().string(), ErrorResponse.class);
+        if (!response.isSuccessful() && !response.isRedirect()) {
+            final ErrorResponse errorResponse = Utils.errorResponse(response, this.okHttpFileStore.getObjectMapper());
             throw new FileStoreServerException(response.code(), errorResponse.getMessage());
         }
     }
 
     private URI bucketUri() {
-        return serverUri.resolve(this.name + "/");
+        return this.okHttpFileStore.getServerUri().resolve(this.name + "/");
     }
 
     private URI fileUri(String filename) {
-        return serverUri.resolve(this.name).resolve(filename);
+        return this.okHttpFileStore.getServerUri().resolve(this.name).resolve(filename);
+    }
+
+    private OkHttpClient okHttpClient() {
+        return this.okHttpFileStore.getOkHttpClient();
+    }
+
+    private ObjectMapper objectMapper() {
+        return this.okHttpFileStore.getObjectMapper();
     }
 
     @Override
@@ -67,12 +71,12 @@ public class OkHttpBucket implements Bucket {
                     .url(bucketUri().toURL())
                     .build();
 
-            final Response response = okHttpClient.newCall(request).execute();
+            final Response response = okHttpClient().newCall(request).execute();
             throwIfResponseInError(response);
 
-            return objectMapper.readValue(
+            return objectMapper().readValue(
                     response.body().string(),
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, FileInfo.class)
+                    objectMapper().getTypeFactory().constructCollectionType(List.class, FileInfo.class)
             );
 
         } catch (IOException e) {
@@ -116,7 +120,7 @@ public class OkHttpBucket implements Bucket {
                     .post(requestBody)
                     .build();
 
-            final Response response = okHttpClient.newCall(request).execute();
+            final Response response = okHttpClient().newCall(request).execute();
             throwIfResponseInError(response);
         } catch (IOException e) {
             throw new FileStoreException(e);
@@ -154,7 +158,7 @@ public class OkHttpBucket implements Bucket {
                     .post(requestBody)
                     .build();
 
-            final Response response = okHttpClient.newCall(request).execute();
+            final Response response = okHttpClient().newCall(request).execute();
             throwIfResponseInError(response);
         } catch (IOException e) {
             throw new FileStoreException(e);
@@ -185,7 +189,7 @@ public class OkHttpBucket implements Bucket {
                     .put(requestBody)
                     .build();
 
-            final Response response = okHttpClient.newCall(request).execute();
+            final Response response = okHttpClient().newCall(request).execute();
             throwIfResponseInError(response);
         } catch (IOException e) {
             throw new FileStoreException(e);
@@ -199,7 +203,7 @@ public class OkHttpBucket implements Bucket {
                     .url(fileUri(filename).toURL())
                     .build();
 
-            final Response response = okHttpClient.newCall(request).execute();
+            final Response response = okHttpClient().newCall(request).execute();
             throwIfResponseInError(response);
 
             if (response.body() == null) {
@@ -223,7 +227,7 @@ public class OkHttpBucket implements Bucket {
                     .delete()
                     .build();
 
-            final Response response = okHttpClient.newCall(request).execute();
+            final Response response = okHttpClient().newCall(request).execute();
             throwIfResponseInError(response);
         } catch (IOException e) {
             throw new FileStoreException(e);
@@ -238,7 +242,7 @@ public class OkHttpBucket implements Bucket {
                     .delete()
                     .build();
 
-            final Response response = okHttpClient.newCall(request).execute();
+            final Response response = okHttpClient().newCall(request).execute();
             throwIfResponseInError(response);
         } catch (IOException e) {
             throw new FileStoreException(e);
