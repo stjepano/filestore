@@ -2,6 +2,7 @@ package com.stjepano.filestore;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stjepano.filestore.common.ErrorResponse;
 import com.stjepano.filestore.service.BucketAlreadyExistsException;
 import com.stjepano.filestore.service.BucketDoesNotExistException;
 import com.stjepano.filestore.service.FileAlreadyExistException;

@@ -1,14 +1,17 @@
 package com.stjepano.filestore.client;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * Represents a filestore server.
  *
  * Allows access to buckets.
  */
-public interface Filestore {
+public interface FileStore {
 
     /**
      * Get a list of all buckets.
