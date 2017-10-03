@@ -43,8 +43,7 @@ public class OkHttpFileStoreTest {
 
     @After
     public void after() throws IOException {
-        mockWebServer.close();
-        mockWebServer = null;
+        mockWebServer.shutdown();
     }
 
     @Test

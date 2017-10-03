@@ -104,5 +104,5 @@ public interface Bucket {
      * @throws FileStoreServerException if server response was not success
      * @throws FileStoreException if communication with server failed in any way
      */
-    void delete();
+    void deleteBucketAndAllFiles();
 }

@@ -22,4 +22,6 @@ dependencies {
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/mockwebserver
     testCompile group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '3.9.0'
+    // https://mvnrepository.com/artifact/com.google.jimfs/jimfs
+    testCompile group: 'com.google.jimfs', name: 'jimfs', version: '1.1'
 }

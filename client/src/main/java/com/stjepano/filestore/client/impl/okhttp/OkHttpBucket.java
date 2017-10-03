@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.ByteString;
 
 import java.io.IOException;
 import java.net.URI;
@@ -53,7 +54,7 @@ public class OkHttpBucket implements Bucket {
     }
 
     private URI fileUri(String filename) {
-        return this.okHttpFileStore.getServerUri().resolve(this.name).resolve(filename);
+        return this.okHttpFileStore.getServerUri().resolve(this.name + "/" + filename);
     }
 
     private OkHttpClient okHttpClient() {
@@ -97,34 +98,7 @@ public class OkHttpBucket implements Bucket {
 
     @Override
     public void uploadFile(Path sourceFilePath) {
-        try {
-            if (!Files.exists(sourceFilePath)
-                    || !Files.isRegularFile(sourceFilePath)
-                    || !Files.isReadable(sourceFilePath)) {
-                throw new FileStoreException(String.format(
-                        "File '%s' does not exist, is not a regular file or can not be read!",
-                        sourceFilePath.normalize().toString()
-                ));
-            }
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart(
-                            "file",
-                            sourceFilePath.getFileName().toString(),
-                            RequestBody.create(MediaType.parse("text/plain"), sourceFilePath.toFile())
-                    )
-                    .build();
-
-            final Request request = new Request.Builder()
-                    .url(bucketUri().toURL())
-                    .post(requestBody)
-                    .build();
-
-            final Response response = okHttpClient().newCall(request).execute();
-            throwIfResponseInError(response);
-        } catch (IOException e) {
-            throw new FileStoreException(e);
-        }
+        uploadFile(sourceFilePath, null);
     }
 
     @Override
@@ -138,23 +112,19 @@ public class OkHttpBucket implements Bucket {
                         sourceFilePath.normalize().toString()
                 ));
             }
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart(
-                            "file",
-                            newFilename,
-                            RequestBody.create(MediaType.parse("text/plain"), sourceFilePath.toFile())
-                    )
-                    .build();
+            RequestBody requestBody = createUploadRequest(sourceFilePath);
             URI bucketUri = bucketUri();
-            HttpUrl httpUrl = HttpUrl.get(bucketUri);
-            if (httpUrl == null) {
-                throw new FileStoreException("Could not build URL from " + bucketUri.toString());
+            URL targetUrl = bucketUri.toURL();
+            if (newFilename != null) {
+                HttpUrl httpUrl = HttpUrl.get(bucketUri);
+                if (httpUrl == null) {
+                    throw new FileStoreException("Could not build URL from " + bucketUri.toString());
+                }
+                targetUrl = httpUrl.newBuilder().addQueryParameter("filename", newFilename).build().url();
             }
-            URL url = httpUrl.newBuilder().addQueryParameter("filename", newFilename).build().url();
 
             final Request request = new Request.Builder()
-                    .url(url)
+                    .url(targetUrl)
                     .post(requestBody)
                     .build();
 
@@ -176,14 +146,7 @@ public class OkHttpBucket implements Bucket {
                         sourceFilePath.normalize().toString()
                 ));
             }
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart(
-                            "file",
-                            filename,
-                            RequestBody.create(MediaType.parse("text/plain"), sourceFilePath.toFile())
-                    )
-                    .build();
+            RequestBody requestBody = createUploadRequest(sourceFilePath);
             final Request request = new Request.Builder()
                     .url(fileUri(filename).toURL())
                     .put(requestBody)
@@ -194,6 +157,17 @@ public class OkHttpBucket implements Bucket {
         } catch (IOException e) {
             throw new FileStoreException(e);
         }
+    }
+
+    private RequestBody createUploadRequest(Path sourceFilePath) throws IOException {
+        return new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart(
+                                "file",
+                                sourceFilePath.getFileName().toString(),
+                                RequestBody.create(MediaType.parse("application/octet-stream"), Files.readAllBytes(sourceFilePath))
+                        )
+                        .build();
     }
 
     @Override
@@ -235,7 +209,7 @@ public class OkHttpBucket implements Bucket {
     }
 
     @Override
-    public void delete() {
+    public void deleteBucketAndAllFiles() {
         try {
             final Request request = new Request.Builder()
                     .url(bucketUri().toURL())
