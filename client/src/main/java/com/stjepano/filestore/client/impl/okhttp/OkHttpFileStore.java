@@ -85,7 +85,7 @@ public class OkHttpFileStore implements FileStore {
         }
     }
 
-    @Override
+    /*@Override
     public void deleteBucket(Bucket bucket) {
         try {
             final Request request = new Request.Builder()
@@ -102,7 +102,7 @@ public class OkHttpFileStore implements FileStore {
         } catch (IOException e) {
             throw new FileStoreException(e);
         }
-    }
+    }*/
 
     public URI getServerUri() {
         return serverUri;

@@ -22,6 +22,8 @@ public interface Bucket {
     /**
      * Get all files in the bucket.
      * @return a list of {@link FileInfo} objects
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
      */
     List<FileInfo> getFiles();
 
@@ -29,6 +31,8 @@ public interface Bucket {
      * Check if file exists
      * @param filename the name of the file
      * @return true if exists, false if not
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
      */
     boolean fileExists(String filename);
 
@@ -36,6 +40,8 @@ public interface Bucket {
      * Get {@link FileInfo} object for given file
      * @param filename name of the file
      * @return a {@link FileInfo} object wrapped in {@link Optional} if file exists, empty optional if not
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
      */
     Optional<FileInfo> getFileInfo(String filename);
 
@@ -45,6 +51,9 @@ public interface Bucket {
      * File in the store will have same name as local file.
      *
      * @param sourceFilePath path of the file
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
+     *                            if file specified by sourceFilePath does not exist or can not read it
      */
     void uploadFile(Path sourceFilePath);
 
@@ -55,6 +64,9 @@ public interface Bucket {
      *
      * @param sourceFilePath path of the file
      * @param newFilename desired filename in the store
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
+     *                            if file specified by sourceFilePath does not exist or can not read it
      */
     void uploadFile(Path sourceFilePath, String newFilename);
 
@@ -62,6 +74,9 @@ public interface Bucket {
      * Overwrite store file with local file
      * @param sourceFilePath the path to local file
      * @param filename name of the file in the store
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
+     *                            if file specified by sourceFilePath does not exist or can not read it
      */
     void overwriteFile(Path sourceFilePath, String filename);
 
@@ -69,17 +84,25 @@ public interface Bucket {
      * Download file to local path.
      * @param filename name of the file in the store
      * @param targetFile path of local file where file will be downloaded.
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
+     *                            if could not write data to targetFile
      */
     void downloadFile(String filename, Path targetFile);
 
     /**
      * Delete file in the store.
      * @param filename name of the file in the store
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
      */
     void deleteFile(String filename);
 
     /**
      * Delete this bucket and all files in it, use with care.
+     *
+     * @throws FileStoreServerException if server response was not success
+     * @throws FileStoreException if communication with server failed in any way
      */
     void delete();
 }
