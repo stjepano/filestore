@@ -13,7 +13,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +51,7 @@ public class OkHttpFileStore implements FileStore {
                     response.body().string(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, String.class)
             );
-            return bucketNameList.stream().map(OkHttpBucket::new).collect(Collectors.toList());
+            return bucketNameList.stream().map(name -> new OkHttpBucket(okHttpClient, serverUri, name)).collect(Collectors.toList());
 
         } catch (IOException e) {
             throw new FileStoreException(e);
@@ -80,7 +79,7 @@ public class OkHttpFileStore implements FileStore {
                 throw new FileStoreServerException(response.code(), errorResponse.getMessage());
             }
 
-            return new OkHttpBucket(bucketName);
+            return new OkHttpBucket(okHttpClient, serverUri, bucketName);
         } catch (IOException e) {
             throw new FileStoreException(e);
         }

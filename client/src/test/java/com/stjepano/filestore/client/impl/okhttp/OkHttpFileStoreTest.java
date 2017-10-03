@@ -182,34 +182,4 @@ public class OkHttpFileStoreTest {
 
         fileStore.createBucket("bucket");
     }
-
-
-    @Test
-    public void deleteBucket() throws Exception {
-        MockResponse mockResponse = new MockResponse()
-                .setResponseCode(200);
-        mockWebServer.enqueue(mockResponse);
-
-        Bucket bucket = new OkHttpBucket("testbucket");
-        fileStore.deleteBucket(bucket);
-
-        RecordedRequest recordedRequest = mockWebServer.takeRequest();
-        assertThat(recordedRequest.getPath())
-                .isEqualTo("/testbucket");
-        assertThat(recordedRequest.getMethod())
-                .isEqualTo("DELETE");
-    }
-
-    @Test(expected = FileStoreServerException.class)
-    public void deleteBucketNotFound() throws Exception {
-        ErrorResponse errorResponse = new ErrorResponse("Bucket not found");
-        MockResponse mockResponse = new MockResponse()
-                .setResponseCode(404)
-                .setBody(objectMapper.writeValueAsString(errorResponse));
-
-        mockWebServer.enqueue(mockResponse);
-
-        Bucket bucket = new OkHttpBucket("testbucket");
-        fileStore.deleteBucket(bucket);
-    }
 }

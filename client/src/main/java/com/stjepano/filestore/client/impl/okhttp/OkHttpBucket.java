@@ -2,7 +2,9 @@ package com.stjepano.filestore.client.impl.okhttp;
 
 import com.stjepano.filestore.client.Bucket;
 import com.stjepano.filestore.common.FileInfo;
+import okhttp3.OkHttpClient;
 
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -11,9 +13,13 @@ import java.util.List;
  */
 public class OkHttpBucket implements Bucket {
 
+    private final OkHttpClient okHttpClient;
+    private final URI serverUri;
     private final String name;
 
-    public OkHttpBucket(String name) {
+    public OkHttpBucket(OkHttpClient okHttpClient, URI serverUri, String name) {
+        this.okHttpClient = okHttpClient;
+        this.serverUri = serverUri;
         this.name = name;
     }
 
@@ -54,6 +60,16 @@ public class OkHttpBucket implements Bucket {
 
     @Override
     public void downloadFile(String filename, Path targetFile) {
+
+    }
+
+    @Override
+    public void deleteFile(String filename) {
+
+    }
+
+    @Override
+    public void delete() {
 
     }
 }

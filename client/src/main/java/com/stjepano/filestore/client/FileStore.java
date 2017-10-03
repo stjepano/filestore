@@ -1,10 +1,7 @@
 package com.stjepano.filestore.client;
 
-import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 /**
  * Represents a filestore server.
@@ -32,12 +29,5 @@ public interface FileStore {
      * @return handle to bucket
      */
     Bucket createBucket(String bucketName);
-
-    /**
-     * Delete a bucket.
-     *
-     * @param bucket handle to bucket
-     */
-    void deleteBucket(Bucket bucket);
 
 }
