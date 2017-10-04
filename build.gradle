@@ -1,16 +1,91 @@
-subprojects {
-
-    apply plugin: 'java'
-
-
-    group 'com.stjepano.microservices.filestore'
-    version '1.0'
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
+buildscript {
     repositories {
-        mavenCentral()
-    }
+        jcenter()
 
+    }
+    dependencies {
+        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+    }
+}
+
+def javaProjects() {
+    subprojects.findAll { new File(it.projectDir, 'src').directory }
+}
+
+def readBuildNumber() {
+    def bnumberPropsFile = file('bnumber.properties')
+    def Properties properties = new Properties()
+    if (bnumberPropsFile.canRead()) {
+        properties.load(new FileInputStream(bnumberPropsFile))
+        def bnumberStr = properties['NEXT_BUILD_NUMBER'];
+        if (bnumberStr == null) return 1
+        return bnumberStr.toInteger()
+    }
+    return 1
+}
+
+def incrementBuildNumber() {
+    def bnumberPropsFile = file('bnumber.properties')
+    def bnumber = readBuildNumber();
+    def Properties properties = new Properties();
+    properties['NEXT_BUILD_NUMBER'] = (bnumber + 1).toString()
+    properties.store(new FileOutputStream(bnumberPropsFile), "")
+}
+
+def verMajor = 0
+def verMinor = 1
+def verPatch = readBuildNumber()
+def verStatus = 'DEV'
+
+gradle.taskGraph.whenReady {taskGraph ->
+    if (taskGraph.hasTask(artifactoryPublish)) {
+        incrementBuildNumber()
+    }
+}
+
+allprojects {
+    apply plugin: "com.jfrog.artifactory"
+    apply plugin: 'idea'
+
+    group = 'com.stjepano.microservices'
+    status = verStatus
+    version = "${verMajor}.${verMinor}.${verPatch}-${verStatus}"
+}
+
+artifactoryPublish.skip = true
+
+configure(javaProjects()) {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    artifactoryPublish {
+        dependsOn assemble
+    }
+}
+
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'gradle-release-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+
+        }
+
+        defaults {
+            publications('mavenJava')
+
+            properties = ['qa.level': 'basic', 'dev.team' : 'core']
+            publishPom = true
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'gradle-release'
+            maven = true
+        }
+    }
 }

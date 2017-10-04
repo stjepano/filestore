@@ -1,9 +1,8 @@
-apply plugin: 'java'
-apply plugin: 'idea'
+
+def jarBaseName = 'filestore-client'
 
 jar {
-    baseName = 'filestore-client'
-    version = "1.0"
+    baseName = jarBaseName
 }
 
 dependencies {
@@ -24,4 +23,13 @@ dependencies {
     testCompile group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '3.9.0'
     // https://mvnrepository.com/artifact/com.google.jimfs/jimfs
     testCompile group: 'com.google.jimfs', name: 'jimfs', version: '1.1'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId jarBaseName
+        }
+    }
 }

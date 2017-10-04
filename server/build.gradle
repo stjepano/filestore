@@ -7,13 +7,12 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
+def jarBaseName = 'filestore-server'
+
 jar {
-    baseName = 'filestore-server'
-    version = "1.0"
+    baseName = jarBaseName
 }
 
 dependencies {
@@ -31,7 +30,7 @@ dependencies {
 
 }
 
-task prepareDistDirectories(type: Delete, dependsOn: build) {
+task prepareDistDirectories(type: Delete, dependsOn: assemble) {
     delete "${buildDir}/dist"
     delete "${buildDir}/dist-files"
 }
@@ -41,6 +40,7 @@ task copyDistFiles(type: Copy, dependsOn: prepareDistDirectories) {
     include "*.jar"
     from "dist"
     include "*.properties"
+    include "*.txt"
     into "${buildDir}/dist-files"
 }
 
@@ -49,4 +49,16 @@ task distribution(type: Zip, dependsOn: copyDistFiles) {
     include "*"
     archiveName "${jar.baseName}-${jar.version}.zip"
     destinationDir  file("${buildDir}/dist")
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId jarBaseName
+
+            artifact distribution {
+                classifier "distribution"
+            }
+        }
+    }
 }

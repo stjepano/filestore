@@ -1,7 +1,7 @@
 package com.stjepano.filestore.client;
 
 /**
- * Thrown when server returns error response (code >= 400)
+ * Thrown when server returns error response (code &gt;= 400)
  */
 public class FileStoreServerException extends FileStoreException {
     private final int code;
