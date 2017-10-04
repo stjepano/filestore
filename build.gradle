@@ -13,36 +13,10 @@ def javaProjects() {
     subprojects.findAll { new File(it.projectDir, 'src').directory }
 }
 
-def readBuildNumber() {
-    def bnumberPropsFile = file('bnumber.properties')
-    def Properties properties = new Properties()
-    if (bnumberPropsFile.canRead()) {
-        properties.load(new FileInputStream(bnumberPropsFile))
-        def bnumberStr = properties['NEXT_BUILD_NUMBER'];
-        if (bnumberStr == null) return 1
-        return bnumberStr.toInteger()
-    }
-    return 1
-}
-
-def incrementBuildNumber() {
-    def bnumberPropsFile = file('bnumber.properties')
-    def bnumber = readBuildNumber();
-    def Properties properties = new Properties();
-    properties['NEXT_BUILD_NUMBER'] = (bnumber + 1).toString()
-    properties.store(new FileOutputStream(bnumberPropsFile), "")
-}
-
 def verMajor = 0
 def verMinor = 1
-def verPatch = readBuildNumber()
+def verPatch = 0
 def verStatus = 'DEV'
-
-gradle.taskGraph.whenReady {taskGraph ->
-    if (taskGraph.hasTask(artifactoryPublish)) {
-        incrementBuildNumber()
-    }
-}
 
 allprojects {
     apply plugin: "com.jfrog.artifactory"

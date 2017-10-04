@@ -31,6 +31,8 @@ dependencies {
 }
 
 task prepareDistDirectories(type: Delete, dependsOn: assemble) {
+    delete fileTree( dir: "${buildDir}/dist", include: '*')
+    delete fileTree( dir: "${buildDir}/dist-files", include: '*')
     delete "${buildDir}/dist"
     delete "${buildDir}/dist-files"
 }
