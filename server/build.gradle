@@ -21,6 +21,7 @@ dependencies {
     compile("org.hibernate:hibernate-validator")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
     testCompile("org.springframework.boot:spring-boot-starter-test")
 
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
