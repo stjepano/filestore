@@ -13,7 +13,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,11 +36,15 @@ public class OkHttpFileStore implements FileStore {
         this.objectMapper = objectMapper;
     }
 
+    private URL bucketUrl() throws MalformedURLException {
+        return serverUri.resolve("/store/").toURL();
+    }
+
     @Override
     public List<Bucket> getBuckets() {
         try {
             final Request request = new Request.Builder()
-                    .url(serverUri.toURL())
+                    .url(bucketUrl())
                     .build();
 
             final Response response = okHttpClient.newCall(request).execute();
@@ -69,7 +75,7 @@ public class OkHttpFileStore implements FileStore {
     public Bucket createBucket(String bucketName) {
         try {
             final Request request = new Request.Builder()
-                    .url(serverUri.toURL())
+                    .url(bucketUrl())
                     .post(RequestBody.create(MediaType.parse("text/plain"), bucketName))
                     .build();
 
@@ -85,25 +91,6 @@ public class OkHttpFileStore implements FileStore {
             throw new FileStoreException(e);
         }
     }
-
-    /*@Override
-    public void deleteBucket(Bucket bucket) {
-        try {
-            final Request request = new Request.Builder()
-                    .url(serverUri.resolve(bucket.getName()).toURL())
-                    .delete()
-                    .build();
-
-            final Response response = okHttpClient.newCall(request).execute();
-
-            if (!response.isSuccessful() && !response.isRedirect()) {
-                final ErrorResponse errorResponse = Utils.from(response, objectMapper);
-                throw new FileStoreServerException(response.code(), errorResponse.getMessage());
-            }
-        } catch (IOException e) {
-            throw new FileStoreException(e);
-        }
-    }*/
 
     public URI getServerUri() {
         return serverUri;

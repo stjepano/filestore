@@ -103,7 +103,7 @@ public class OkHttpBucketTest {
         assertThat(recordedRequest.getMethod())
                 .isEqualTo("GET");
         assertThat(recordedRequest.getPath())
-                .isEqualTo("/"+BUCKET_NAME+"/");
+                .isEqualTo("/store/"+BUCKET_NAME+"/");
     }
 
     @Test(expected = FileStoreServerException.class)
@@ -232,7 +232,7 @@ public class OkHttpBucketTest {
         assertThat(recordedRequest.getMethod())
                 .isEqualTo("POST");
         assertThat(recordedRequest.getPath())
-                .isEqualTo("/" + BUCKET_NAME + "/");
+                .isEqualTo("/store/" + BUCKET_NAME + "/");
         String bodyString = recordedRequest.getBody().readString(Charset.forName("utf-8"));
         assertThat(bodyString)
                 .contains("Content-Disposition: form-data; name=\"file\"; filename=\"fileA.dat\"");
@@ -265,7 +265,7 @@ public class OkHttpBucketTest {
         assertThat(recordedRequest.getMethod())
                 .isEqualTo("POST");
         assertThat(recordedRequest.getPath())
-                .isEqualTo("/" + BUCKET_NAME + "/?filename=newFile.dat");
+                .isEqualTo("/store/" + BUCKET_NAME + "/?filename=newFile.dat");
         String bodyString = recordedRequest.getBody().readString(Charset.forName("utf-8"));
         assertThat(bodyString)
                 .contains("Content-Disposition: form-data; name=\"file\"; filename=\"fileA.dat\"");
@@ -297,7 +297,7 @@ public class OkHttpBucketTest {
         assertThat(recordedRequest.getMethod())
                 .isEqualTo("PUT");
         assertThat(recordedRequest.getPath())
-                .isEqualTo("/" + BUCKET_NAME + "/fileA.dat");
+                .isEqualTo("/store/" + BUCKET_NAME + "/fileA.dat");
         String bodyString = recordedRequest.getBody().readString(Charset.forName("utf-8"));
         assertThat(bodyString)
                 .contains("Content-Disposition: form-data; name=\"file\"; filename=\"fileA.dat\"");
@@ -337,7 +337,7 @@ public class OkHttpBucketTest {
         assertThat(recordedRequest.getMethod())
                 .isEqualTo("GET");
         assertThat(recordedRequest.getPath())
-                .isEqualTo("/" + BUCKET_NAME + "/testA.dat");
+                .isEqualTo("/store/" + BUCKET_NAME + "/testA.dat");
 
         byte[] downloadedBytes = Files.readAllBytes(downloadPath);
         assertThat(dataBytes)
@@ -371,7 +371,7 @@ public class OkHttpBucketTest {
         assertThat(recordedRequest.getMethod())
                 .isEqualTo("DELETE");
         assertThat(recordedRequest.getPath())
-                .isEqualTo("/"+BUCKET_NAME+"/testA.dat");
+                .isEqualTo("/store/"+BUCKET_NAME+"/testA.dat");
     }
 
     @Test(expected = FileStoreServerException.class)
@@ -398,7 +398,7 @@ public class OkHttpBucketTest {
         assertThat(recordedRequest.getMethod())
                 .isEqualTo("DELETE");
         assertThat(recordedRequest.getPath())
-                .isEqualTo("/"+BUCKET_NAME+"/");
+                .isEqualTo("/store/"+BUCKET_NAME+"/");
     }
 
 

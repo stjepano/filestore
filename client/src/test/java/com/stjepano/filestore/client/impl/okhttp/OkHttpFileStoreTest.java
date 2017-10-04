@@ -144,7 +144,7 @@ public class OkHttpFileStoreTest {
         assertThat(recordedRequest.getMethod())
                 .isEqualTo("POST");
         assertThat(recordedRequest.getPath())
-                .isEqualTo("/");
+                .isEqualTo("/store/");
         assertThat(recordedRequest.getBody().readString(Charset.forName("utf-8")))
                 .isEqualTo("bucket");
     }

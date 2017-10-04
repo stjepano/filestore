@@ -50,11 +50,11 @@ public class OkHttpBucket implements Bucket {
     }
 
     private URI bucketUri() {
-        return this.okHttpFileStore.getServerUri().resolve(this.name + "/");
+        return this.okHttpFileStore.getServerUri().resolve("/store/" + this.name + "/");
     }
 
     private URI fileUri(String filename) {
-        return this.okHttpFileStore.getServerUri().resolve(this.name + "/" + filename);
+        return this.okHttpFileStore.getServerUri().resolve("/store/" + this.name + "/" + filename);
     }
 
     private OkHttpClient okHttpClient() {
