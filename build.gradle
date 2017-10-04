@@ -68,7 +68,7 @@ artifactory {
     contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
     publish {
         repository {
-            repoKey = 'gradle-release-local'
+            repoKey = 'gradle-dev-local'
             username = "${artifactory_user}"
             password = "${artifactory_password}"
             maven = true
@@ -84,7 +84,7 @@ artifactory {
     }
     resolve {
         repository {
-            repoKey = 'gradle-release'
+            repoKey = 'gradle-dev'
             maven = true
         }
     }
