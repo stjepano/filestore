@@ -26,7 +26,7 @@ import java.util.List;
  * A file controller
  */
 @RestController
-@RequestMapping("/files/{bucket}")
+@RequestMapping("/store/{bucket}")
 public class FileController {
 
     @Autowired

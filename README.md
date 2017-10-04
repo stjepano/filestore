@@ -76,7 +76,7 @@ All error responses (>= 400) will have a response body which looks like this:
 
 #### Querying and downloading
 
-##### GET / 
+##### GET /store/
 
 Get list of buckets. 
 
@@ -86,7 +86,7 @@ Returns array of bucket names on success (status code 200):
 [ "bucketA", "bucketB", "bucketC", ... ]
 ```
 
-##### GET /bucket-name/
+##### GET /store/bucket-name/
 
 Get list of files in a bucket.
 
@@ -104,7 +104,7 @@ Error responses:
 * 404 if bucket does not exists
 * 400 if bucket name is invalid.
 
-##### GET /bucket-name/file-name
+##### GET /store/bucket-name/file-name
 
 Download a file.
 
@@ -115,7 +115,7 @@ Error responses:
 * 404 if bucket or file do not exist
 * 400 if bucket name or file name is invalid
 
-##### GET /bucket-name/file-name?att=false
+##### GET /store/bucket-name/file-name?att=false
 
 Download file not as attachment (effect in a browser is to open file in current tab).
 
@@ -128,7 +128,7 @@ Error responses:
 
 #### Deleting buckets and files
  
-##### DELETE /bucket-name/
+##### DELETE /store/bucket-name/
 
 Delete a bucket (and all files in it, use with care).
 
@@ -139,7 +139,7 @@ Error responses:
 * 404 if bucket or file do not exist
 * 400 if bucket name or file name is invalid
 
-##### DELETE /bucket-name/file-name
+##### DELETE /store/bucket-name/file-name
 
 Delete a file.
 
@@ -152,14 +152,14 @@ Error responses:
 
 #### Creating bucket
 
-##### POST /
+##### POST /store/
 
 Create a bucket, specify bucket name in body
 
 Example:
 
   ```
-  POST /
+  POST /store/
   
   Request body:
   hello-world
@@ -174,7 +174,7 @@ Error responses:
 
 #### Uploading new files and overwriting existing ones  
 
-##### POST /bucket-name/
+##### POST /store/bucket-name/
 
 Upload a file, this takes multipart form file with key file, file will be created with original filename
 
@@ -184,7 +184,7 @@ Error responses:
 * 404 if bucket does not exist
 * 400 if bucket or file name invalid
 
-##### POST /bucket-name/?filename=xyz.png
+##### POST /store/bucket-name/?filename=xyz.png
 
 Upload a file but with different filename
 
@@ -196,7 +196,7 @@ Error responses:
 
 Uploading can not overwrite existing file, if you attempt to upload to an existing file you will get 409. To overwrite existing file use:
 
-##### PUT /bucket-name/file-name
+##### PUT /store/bucket-name/file-name
 
 Overwrite file with new data.
 

@@ -67,7 +67,7 @@ public class FileControllerTest {
                         new FileInfo("filea.png", 5000, "image/png", now)
                 ));
 
-        String response = mockMvc.perform(get("/files/bucket/"))
+        String response = mockMvc.perform(get("/store/bucket/"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -83,7 +83,7 @@ public class FileControllerTest {
 
     @Test
     public void testListFiles_InvalidBucketName() throws Exception {
-        mockMvc.perform(get("/files/.\\..\\..\\shadow/"))
+        mockMvc.perform(get("/store/.\\..\\..\\shadow/"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -93,7 +93,7 @@ public class FileControllerTest {
                 .when(fileService)
                 .getFiles(BucketId.from("bucket"));
 
-        mockMvc.perform(get("/files/bucket/"))
+        mockMvc.perform(get("/store/bucket/"))
                 .andExpect(status().isNotFound());
     }
 
@@ -103,7 +103,7 @@ public class FileControllerTest {
                 .when(fileService)
                 .deleteFile(FileId.from("bucket", "fileA.png"));
 
-        mockMvc.perform(delete("/files/bucket/fileA.png"))
+        mockMvc.perform(delete("/store/bucket/fileA.png"))
                 .andExpect(status().isOk());
 
         verify(fileService, times(1))
@@ -116,20 +116,20 @@ public class FileControllerTest {
                 .when(fileService)
                 .deleteFile(FileId.from("bucket", "fileA.png"));
 
-        mockMvc.perform(delete("/files/bucket/fileA.png"))
+        mockMvc.perform(delete("/store/bucket/fileA.png"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testDeleteFile_InvalidBucketName() throws Exception {
-        mockMvc.perform(delete("/files/.\\..\\..\\someDir/sensitive_data"))
+        mockMvc.perform(delete("/store/.\\..\\..\\someDir/sensitive_data"))
                 .andExpect(status().isBadRequest());
     }
 
 
     @Test
     public void testDeleteFile_InvalidFileName() throws Exception {
-        mockMvc.perform(delete("/files/bucket/fileA\\..\\..\\shadow.png"))
+        mockMvc.perform(delete("/store/bucket/fileA\\..\\..\\shadow.png"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -140,7 +140,7 @@ public class FileControllerTest {
                 .when(fileService)
                 .deleteFile(FileId.from("bucket", "fileA.png"));
 
-        mockMvc.perform(delete("/files/bucket/fileA.png"))
+        mockMvc.perform(delete("/store/bucket/fileA.png"))
                 .andExpect(status().isNotFound());
 
         verify(fileService, times(1))
@@ -156,7 +156,7 @@ public class FileControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
 
-        mockMvc.perform(fileUpload("/files/bucket/").file(file))
+        mockMvc.perform(fileUpload("/store/bucket/").file(file))
                 .andExpect(status().isOk());
 
         verify(fileService, times(1))
@@ -167,14 +167,14 @@ public class FileControllerTest {
     @Test
     public void testUploadFile_InvalidBucketName() throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
-        mockMvc.perform(fileUpload("/files/bucket$$$$$../").file(file))
+        mockMvc.perform(fileUpload("/store/bucket$$$$$../").file(file))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testUploadFile_InvalidFileName() throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", "..\\..\\fileA.png", "image/png", "abcd".getBytes());
-        mockMvc.perform(fileUpload("/files/bucket/").file(file))
+        mockMvc.perform(fileUpload("/store/bucket/").file(file))
                 .andExpect(status().isBadRequest());
     }
 
@@ -186,7 +186,7 @@ public class FileControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
 
-        mockMvc.perform(fileUpload("/files/bucket/?filename=something.png").file(file))
+        mockMvc.perform(fileUpload("/store/bucket/?filename=something.png").file(file))
                 .andExpect(status().isOk());
 
         verify(fileService, times(1))
@@ -196,7 +196,7 @@ public class FileControllerTest {
     @Test
     public void testUploadFile__DifferentFileName_InvalidFileName() throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
-        mockMvc.perform(fileUpload("/files/bucket/?filename=..\\..\\something.php").file(file))
+        mockMvc.perform(fileUpload("/store/bucket/?filename=..\\..\\something.php").file(file))
                 .andExpect(status().isBadRequest());
     }
 
@@ -208,7 +208,7 @@ public class FileControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
 
-        mockMvc.perform(fileUpload("/files/bucket/").file(file))
+        mockMvc.perform(fileUpload("/store/bucket/").file(file))
                 .andExpect(status().isNotFound());
     }
 
@@ -220,7 +220,7 @@ public class FileControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
 
-        mockMvc.perform(fileUpload("/files/bucket/").file(file))
+        mockMvc.perform(fileUpload("/store/bucket/").file(file))
                 .andExpect(status().isConflict());
     }
 
@@ -233,7 +233,7 @@ public class FileControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
 
-        mockMvc.perform(fileUpload("/files/bucket/fileA.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
+        mockMvc.perform(fileUpload("/store/bucket/fileA.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
                 .andExpect(status().isOk());
 
         verify(fileService, times(1))
@@ -244,14 +244,14 @@ public class FileControllerTest {
     @Test
     public void testOverwriteFile_InvalidBucketName() throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
-        mockMvc.perform(fileUpload("/files/bucket$$$$$../fileA.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
+        mockMvc.perform(fileUpload("/store/bucket$$$$$../fileA.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testOverwriteFile_InvalidFileName() throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
-        mockMvc.perform(fileUpload("/files/bucket/fileA..\\..\\.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
+        mockMvc.perform(fileUpload("/store/bucket/fileA..\\..\\.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
                 .andExpect(status().isBadRequest());
     }
 
@@ -263,7 +263,7 @@ public class FileControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
 
-        mockMvc.perform(fileUpload("/files/bucket/fileA.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
+        mockMvc.perform(fileUpload("/store/bucket/fileA.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
                 .andExpect(status().isNotFound());
     }
 
@@ -275,7 +275,7 @@ public class FileControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "fileA.png", "image/png", "abcd".getBytes());
 
-        mockMvc.perform(fileUpload("/files/bucket/fileA.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
+        mockMvc.perform(fileUpload("/store/bucket/fileA.png").file(file).with(request -> { request.setMethod("PUT"); return request; }))
                 .andExpect(status().isNotFound());
     }
 
@@ -293,7 +293,7 @@ public class FileControllerTest {
         when(resource.getInputStream())
                 .thenReturn(inputStream);
 
-        mockMvc.perform(get("/files/bucket/fileA.png"))
+        mockMvc.perform(get("/store/bucket/fileA.png"))
                 .andExpect(status().isOk())
                 .andExpect(content().bytes(bytes))
                 .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"fileA.png\""));
@@ -301,13 +301,13 @@ public class FileControllerTest {
 
     @Test
     public void testDownloadFile_InvalidBucketName() throws Exception {
-        mockMvc.perform(get("/files/~~~bucket$$/fileA.png"))
+        mockMvc.perform(get("/store/~~~bucket$$/fileA.png"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testDownloadFile_InvalidFileName() throws Exception {
-        mockMvc.perform(get("/files/bucket/fileA\\.png"))
+        mockMvc.perform(get("/store/bucket/fileA\\.png"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -324,7 +324,7 @@ public class FileControllerTest {
         when(resource.getInputStream())
                 .thenReturn(inputStream);
 
-        mockMvc.perform(get("/files/bucket/fileA.png?att=false"))
+        mockMvc.perform(get("/store/bucket/fileA.png?att=false"))
                 .andExpect(status().isOk())
                 .andExpect(content().bytes(bytes))
                 .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION));
@@ -337,7 +337,7 @@ public class FileControllerTest {
                 .when(fileService)
                 .download(eq(FileId.from("bucket", "fileA.png")));
 
-        mockMvc.perform(get("/files/bucket/fileA.png?att=false"))
+        mockMvc.perform(get("/store/bucket/fileA.png?att=false"))
                 .andExpect(status().isNotFound());
     }
 
@@ -348,7 +348,7 @@ public class FileControllerTest {
                 .when(fileService)
                 .download(eq(FileId.from("bucket", "fileA.png")));
 
-        mockMvc.perform(get("/files/bucket/fileA.png?att=false"))
+        mockMvc.perform(get("/store/bucket/fileA.png?att=false"))
                 .andExpect(status().isNotFound());
     }
 

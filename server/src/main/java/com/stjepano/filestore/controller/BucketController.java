@@ -20,7 +20,7 @@ import java.util.List;
  * File controller
  */
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/store")
 public class BucketController {
 
     @Autowired

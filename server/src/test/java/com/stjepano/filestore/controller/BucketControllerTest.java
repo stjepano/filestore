@@ -48,7 +48,7 @@ public class BucketControllerTest {
         when(fileService.getBuckets())
                 .thenReturn(Arrays.asList("bucket1", "bucket2"));
 
-        String response = mockMvc.perform(get("/files/").accept(MediaType.APPLICATION_JSON))
+        String response = mockMvc.perform(get("/store/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -61,7 +61,7 @@ public class BucketControllerTest {
     public void testCreateBucket() throws Exception {
         doNothing().when(fileService).createBucket(any(BucketId.class));
 
-        mockMvc.perform(post("/files/").content("bucket3"))
+        mockMvc.perform(post("/store/").content("bucket3"))
                 .andExpect(status().isOk());
 
         verify(fileService, times(1))
@@ -75,7 +75,7 @@ public class BucketControllerTest {
                 .when(fileService)
                 .createBucket(eq(BucketId.from("bucketAA")));
 
-        mockMvc.perform(post("/files/").content("bucketAA"))
+        mockMvc.perform(post("/store/").content("bucketAA"))
                 .andExpect(status().isConflict());
     }
 
@@ -86,7 +86,7 @@ public class BucketControllerTest {
                 .when(fileService)
                 .deleteBucket(BucketId.from("bucket1"));
 
-        mockMvc.perform(delete("/files/bucket1/"))
+        mockMvc.perform(delete("/store/bucket1/"))
                 .andExpect(status().isOk());
 
         verify(fileService, times(1))
@@ -100,19 +100,19 @@ public class BucketControllerTest {
                 .when(fileService)
                 .deleteBucket(BucketId.from("bucket1"));
 
-        mockMvc.perform(delete("/files/bucket1/"))
+        mockMvc.perform(delete("/store/bucket1/"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testCreateBucket_InvalidName() throws Exception {
-        mockMvc.perform(post("/files/").content("..\\bucket"))
+        mockMvc.perform(post("/store/").content("..\\bucket"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testDeleteBucket_InvalidName() throws Exception {
-        mockMvc.perform(delete("/files/bucket$$"))
+        mockMvc.perform(delete("/store/bucket$$"))
                 .andExpect(status().isBadRequest());
     }
 
