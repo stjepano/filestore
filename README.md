@@ -211,3 +211,11 @@ Error responses:
 An effort has been made to prevent file access outside of but I can not give full guarantee. This is accomplished by
 validating _bucket-name_ and _file-name_ in each request, only certain patterns are allowed which should prevent
 potential attacks.
+
+At the moment there is no any kind of security integration (OAuth, spring security, ...) this is planned for the future.
+
+### Actuator
+
+Spring actuator is available at /mngmnt path.
+
+At the moment only /mgmnt/health and /mgmnt/info are accessible from outside.
