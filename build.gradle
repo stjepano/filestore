@@ -65,7 +65,7 @@ configure(javaProjects()) {
 }
 
 artifactory {
-    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    contextUrl = "http://artifactory.stjepano.com/artifactory"   //The base Artifactory URL if not overridden by the publisher/resolver
     publish {
         repository {
             repoKey = 'gradle-dev-local'
