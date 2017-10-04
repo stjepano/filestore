@@ -1,6 +1,6 @@
 # Filestore
 
-_Not stable as it is not yet tested in a real production system_
+_WARNING: In early stage of development_
 
 This repository contains 2 projects:
 
