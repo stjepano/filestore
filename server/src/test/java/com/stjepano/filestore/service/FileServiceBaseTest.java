@@ -2,6 +2,7 @@ package com.stjepano.filestore.service;
 
 import com.stjepano.filestore.common.FileInfo;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.Condition;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,7 +137,7 @@ public abstract class FileServiceBaseTest {
         Assertions.assertThat(third.getSize())
                 .isEqualTo("abcdef".getBytes().length);
         Assertions.assertThat(third.getMimeType())
-                .isEqualTo("application/x-zip-compressed");
+                .isIn("application/x-zip-compressed", "application/zip");
     }
 
     @Test(expected = BucketDoesNotExistException.class)
